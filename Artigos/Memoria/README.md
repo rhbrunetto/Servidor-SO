@@ -5,7 +5,7 @@ Os tópicos são formados com base no livro Sistemas Operacionais Modernos (Tene
 
 # TODO:
 - [ ] Introdução
-  - [ ] O que é Memória Virtual @RicardoBrunetto
+  - [ ] O que é Memória Virtual @github/RicardoBrunetto
     - [ ] Motivação (Por que existe?)
     - [ ] Consequências (O que isso afeta?)
   - [ ] O que é Paginação
