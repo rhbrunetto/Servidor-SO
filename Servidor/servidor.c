@@ -19,5 +19,5 @@
 // |     Gerenciamento de Sockets      |
 // +-----------------------------------+
 int main(){
-    socket();
+  
 }
