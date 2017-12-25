@@ -1,4 +1,4 @@
-EXEC=main
+EXEC=servidor
 
 all: execute
 	@echo "Sucesso!"

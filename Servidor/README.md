@@ -20,3 +20,7 @@ Deve ouvir as requisições em uma porta através dos sockets e tratar da seguin
 - [ ] Escrever no Log
   - [ ] Tratamento de Região Crítica
     - [ ] Implementação do Semáforo
+
+## Links possivelmente úteis
+http://www.linuxhowtos.org/manpages/2/socket.htm  
+http://www.linuxhowtos.org/C_C++/socket.htm
