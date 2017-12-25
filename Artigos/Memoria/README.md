@@ -1,7 +1,7 @@
 # Memória virtual e algoritmos de paginação
 Seguem as listas de tópicos e suas respectivas responsabilidades / status.  
 Marcar as responsabilidades com [@seu_nome_no_git].  
-Os tópicos são formados com base no livro Sistemas Operacionais Modernos (Tenenbaum, 3a edição).
+Os tópicos são formados com base nos capítulos 3.3 e 3.4 do livro "Sistemas Operacionais Modernos" (Tenenbaum, 3a edição).
 
 # TODO:
 - [ ] Introdução
