@@ -13,11 +13,20 @@
 #include <stlib.h>
 #include <sys/types.h>
 #include <sys/sockets.h>
+#include <netinet/in.h>
+
+#define ERROR_CODE 1
+#define PROTOCOL 0
 
 /* int socket(int domain, int type, int protocol) */
 // +-----------------------------------+
 // |     Gerenciamento de Sockets      |
 // +-----------------------------------+
 int main(){
-  
+    int socketfd = socket(AF_INET, SOCK_STREAM, PROTOCOL);
+}
+
+void error(char *err){
+  perror(err);
+  exit(ERROR_CODE);
 }
