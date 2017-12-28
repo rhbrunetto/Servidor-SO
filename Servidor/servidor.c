@@ -18,6 +18,15 @@
 #define ERROR_CODE 1
 #define PROTOCOL 0
 
+typedef struct addr{
+  short familia;
+  u_short porta;
+  struct addr endereco;
+  char zero[8];
+}SocketEndereco;
+
+SocketEndereco server, cliente;
+
 /* int socket(int domain, int type, int protocol) */
 // +-----------------------------------+
 // |     Gerenciamento de Sockets      |
