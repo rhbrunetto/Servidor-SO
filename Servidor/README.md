@@ -1,4 +1,4 @@
-# Servidor
+﻿# Servidor
 Aplicação de servidor (Linux).
 Deve ouvir as requisições em uma porta através dos sockets e tratar da seguinte forma:
   - #1 Ao chegar uma requisição, clonar o processo [Fork]
@@ -24,3 +24,5 @@ Deve ouvir as requisições em uma porta através dos sockets e tratar da seguin
 ## Links possivelmente úteis
 http://www.linuxhowtos.org/manpages/2/socket.htm  
 http://www.linuxhowtos.org/C_C++/socket.htm
+https://stackoverflow.com/questions/2784500/how-to-send-a-simple-string-between-two-programs-using-pipes
+http://16hop.com.br/tag/canalizacao-encadeamento-pipe-fifo-pipe-nomeado-socket-ipc-socket-docker/
