@@ -8,7 +8,7 @@ Os tópicos são formados com base nos capítulos 3.3 e 3.4 do livro "Sistemas O
   - [ ] O que é Memória Virtual [@RicardoBrunetto]
     - [ ] Motivação (Por que existe?)
     - [ ] Consequências (O que isso afeta?)
-  - [ ] O que é Paginação
+  - [ ] O que é Paginação [@RicardoBrunetto]
     - [ ] Motivação
     - [ ] Consequências
     - [ ] Implementação

@@ -1,0 +1,13 @@
+\contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{3}{section.1}
+\contentsline {section}{\numberline {2}Preven\IeC {\c c}\IeC {\~a}o e Modelagem}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Modelagem de Grafos}{5}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Estados Seguros}{5}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Trajet\IeC {\'o}rias de Recursos}{6}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Algoritmo do Banqueiro}{7}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}\IeC {\'U}nico Recurso}{7}{subsubsection.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}M\IeC {\'u}ltiplos Recursos}{8}{subsubsection.2.4.2}
+\contentsline {section}{\numberline {3}Evitando as Condi\IeC {\c c}\IeC {\~o}es de Deadlock}{8}{section.3}
+\contentsline {subsection}{\numberline {3.1}Condi\IeC {\c c}\IeC {\~a}o de Exclus\IeC {\~a}o M\IeC {\'u}tua}{8}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Condi\IeC {\c c}\IeC {\~a}o de Posse e Espera}{9}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Condi\IeC {\c c}\IeC {\~a}o de N\IeC {\~a}o-Preemp\IeC {\c c}\IeC {\~a}o}{9}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Condi\IeC {\c c}\IeC {\~a}o de Espera Circular}{10}{subsection.3.4}
