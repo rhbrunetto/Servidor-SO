@@ -4,7 +4,6 @@
 // |                                   |
 // |     Ricardo Henrique Brunetto     |
 // |    Rafael Rodrigues dos Santos    |
-// |   Thais Aparecida Silva Camacho   |
 // |                                   |
 // |          Dezembro de 2017         |
 // |            Maringá - PR           |
@@ -37,19 +36,19 @@ typedef struct {
 
 void* atualizar_log(void* r) {
 	requisicao *req = (requisicao*) r;
-	
+
 	// coletando data e hora da requisição
 	time_t rawtime;
 	struct tm *timeinfo;
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
-	
+
 	int logfd, status;
 	char msg[128];
 	bzero(msg, 128);
 	sprintf(msg, "%d. Requisição de %s recebida em %s", req->id, (req->tipo == 1) ? "consulta" : "inserção", asctime(timeinfo)); // asctime já coloca \n no final
 	free(req);
-	
+
 	pthread_mutex_lock(&mutex_log);
 	if ((logfd = open(REQ_LOG, O_APPEND | 0666)) < 0) {
 		printf("Impossível abrir log\n\n");
@@ -88,37 +87,37 @@ int main(){
 	pid_t pid;
 	socklen_t socklen = sizeof(servidor);
 	pthread_t thread;
-	
+
 	if ((sockfd_servidor = socket(AF_INET, SOCK_STREAM, PROTOCOL)) < 0) {
 		error("Erro ao criar socket do servidor\n\n");
 	}
-	
+
 	bzero((char*) &servidor, socklen);
 	servidor.sin_family = AF_INET;
     servidor.sin_port = htons(PORT);
 	servidor.sin_addr.s_addr = INADDR_ANY;
-    
+
 	if (bind(sockfd_servidor, (struct sockaddr*) &servidor, socklen) < 0) {
 		error("Erro ao fazer ligação com o descritor do socket\n\n");
 	}
-	
+
 	listen(sockfd_servidor, 5);
 	while(1) {
 		if ((sockfd_cliente = accept(sockfd_servidor, (struct sockaddr*) &cliente, &socklen)) < 0) {
 			error("Erro ao aceitar requisição do cliente\n\n");
 		}
 		req_id++;
-		
+
 		int fifofd;
 		char nome_fifo[256];
-		
+
 		sprintf(nome_fifo, "/tmp/fifo_%d", req_id);
 		mkfifo(nome_fifo, 0666);
-		
+
 		if ((pid = fork()) < 0) {
 			error("Erro ao criar processo filho\n\n");
 		}
-		
+
 		if (pid == 0) { // código do filho
 			close(sockfd_servidor);
 			if ((fifofd = open(nome_fifo, O_RDONLY)) < 0) {
@@ -133,14 +132,14 @@ int main(){
 			char tipo, buffer[BUF_LEN];
 			read(sockfd_cliente, &tipo, sizeof(tipo));
 			read(sockfd_cliente, buffer, sizeof(buffer));
-			
+
 			requisicao *req = malloc(sizeof(requisicao));
 			req->id = req_id;
 			req->tipo = tipo;
-			
+
 			pthread_create(&thread, NULL, atualizar_log, (void*) req);
 			pthread_detach(thread);
-			
+
 			if ((fifofd = open(nome_fifo, O_WRONLY)) < 0) {
 				perror("Erro ao abrir fifo no pai\n\n");
 				continue;
@@ -164,7 +163,7 @@ void tratar_requisicao(int sockfd_cliente, int fifofd) {
 	char tipo, buffer[BUF_LEN], resposta[3 * BUF_LEN];
 	int n;
 	FILE *regfd;
-	
+
 	bzero(buffer, sizeof(buffer));
 	n = read(fifofd, &tipo, sizeof(tipo));
 	if (n <= 0) {
@@ -174,7 +173,7 @@ void tratar_requisicao(int sockfd_cliente, int fifofd) {
 	if (n <= 0) {
 		printf("Erro no filho ao ler dados\n");
 	}
-	
+
 	bzero(resposta, sizeof(resposta));
 	if (tipo == 1) { // consulta
 		if ((regfd = fopen(REGS, "r")) == NULL) {
@@ -187,7 +186,7 @@ void tratar_requisicao(int sockfd_cliente, int fifofd) {
 			bzero(nome, sizeof(nome));
 			bzero(curso, sizeof(curso));
 			sprintf(resposta, "NULL");
-			
+
 			while(fscanf(regfd, "%[^|]|%[^|]|%[^|]|", ID, nome, curso) != EOF) {
 				if (strcmp(buffer, ID) == 0) {
 					sprintf(resposta, "%s|%s|%s|", ID, nome, curso);
@@ -201,7 +200,7 @@ void tratar_requisicao(int sockfd_cliente, int fifofd) {
 			   colocar semáforo aqui
 		   ------------------------
 		*/
-		
+
 		if ((regfd = fopen(REGS, "a")) == NULL) {
 			printf("Erro ao acessar registros\n\n");
 			sprintf(resposta, "ERROR");
