@@ -1,4 +1,4 @@
-# Servidor-SO
+﻿# Servidor-SO
 Trabalho de Sistemas Operacionais
 
 Servidor Linux - C ou C++
@@ -28,10 +28,10 @@ if(v){
     -> Escolher um assunto.
 
 # Lista do que usar (Servidor):
-- [ ] Sockets
-- [ ] Fork
-- [ ] Pipe
-- [ ] Fifo
-- [ ] Memória Compartilhada
-- [ ] Semáforos
-- [ ] Threads
+- [X] Sockets
+- [X] Fork
+- [X] Pipe
+- [X] Fifo
+- [X] Memória Compartilhada
+- [X] Semáforos
+- [X] Threads

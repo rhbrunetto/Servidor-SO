@@ -6,7 +6,7 @@ all: execute
 	@echo "Sucesso!"
 
 compile:
-	@gcc $(EXEC).c -o $(EXEC) -lm -lpthread
+	@gcc $(EXEC).c -o $(EXEC) -lm -lpthread -lrt -w
 
 files: compile
 	@if ! [ -e $(LOG) ]; then \

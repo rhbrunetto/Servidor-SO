@@ -12,13 +12,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/shm.h>
+#include <sys/mman.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <pthread.h> // API pra trabalhar com threads
-#include <time.h>    // biblioteca pra pegar a hora do sistema
-#include <unistd.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <time.h>
+
 
 #define ERROR_CODE 1
 #define PROTOCOL 0
@@ -26,6 +30,7 @@
 #define BUF_LEN 256
 #define REQ_LOG "reqs.log"
 #define REGS "registers.dat"
+#define SHM_PATH "/tmp/shm_servidor"
 
 pthread_mutex_t mutex_log = PTHREAD_MUTEX_INITIALIZER;
 
@@ -63,26 +68,41 @@ void* atualizar_log(void* r) {
 	pthread_exit((void*) status);
 }
 
-void tratar_requisicao(int, int);
+typedef struct {
+	FILE *regfd;
+	sem_t semaforo;
+} SHM;
 
-// já tem a struct definida na biblioteca, por isso comentei aqui
-/*typedef struct addr {
-  short familia;
-  u_short porta;
-  struct addr endereco;
-  char zero[8];
-}SocketEndereco;
-
-SocketEndereco servidor, cliente;
-*/
+SHM *memoria;
 struct sockaddr_in servidor, cliente;
 
+void tratar_requisicao(int, int);
 void error(char *err){
   perror(err);
   exit(ERROR_CODE);
 }
 
 int main(){
+	/* preparando memória compartilhada */
+	key_t shmKey;
+	int shmfd, shmsegid;
+	
+	if ((shmfd = open(SHM_PATH, O_CREAT | O_RDWR, 0666)) < 0) {
+		error("Erro ao criar memória\n\n");
+	}
+	
+	if ((shmKey = ftok(SHM_PATH, 5)) < 0) {
+		error("Erro na chave\n\n");
+	}
+	
+	if ((shmsegid = shmget(shmKey, sizeof(SHM), 0666 | IPC_CREAT)) < 0) {
+		error("Erro ao associar segmento de memória compartilhada\n\n");
+	}
+	
+	memoria = (SHM*) shmat(shmsegid, NULL, 0);
+	sem_init(&(memoria->semaforo), 1, 1);
+	
+	/* preparando conexão */
 	int sockfd_servidor, sockfd_cliente, req_id = 0;
 	pid_t pid;
 	socklen_t socklen = sizeof(servidor);
@@ -101,6 +121,7 @@ int main(){
 		error("Erro ao fazer ligação com o descritor do socket\n\n");
 	}
 
+	printf("Servidor iniciado com sucesso!\n");
 	listen(sockfd_servidor, 5);
 	while(1) {
 		if ((sockfd_cliente = accept(sockfd_servidor, (struct sockaddr*) &cliente, &socklen)) < 0) {
@@ -162,7 +183,6 @@ int main(){
 void tratar_requisicao(int sockfd_cliente, int fifofd) {
 	char tipo, buffer[BUF_LEN], resposta[3 * BUF_LEN];
 	int n;
-	FILE *regfd;
 
 	bzero(buffer, sizeof(buffer));
 	n = read(fifofd, &tipo, sizeof(tipo));
@@ -176,7 +196,9 @@ void tratar_requisicao(int sockfd_cliente, int fifofd) {
 
 	bzero(resposta, sizeof(resposta));
 	if (tipo == 1) { // consulta
-		if ((regfd = fopen(REGS, "r")) == NULL) {
+		sem_wait(&(memoria->semaforo));
+		
+		if ((memoria->regfd = fopen(REGS, "r")) == NULL) {
 			printf("Erro ao acessar registros\n\n");
 			sprintf(resposta, "ERROR");
 		}
@@ -187,28 +209,29 @@ void tratar_requisicao(int sockfd_cliente, int fifofd) {
 			bzero(curso, sizeof(curso));
 			sprintf(resposta, "NULL");
 
-			while(fscanf(regfd, "%[^|]|%[^|]|%[^|]|", ID, nome, curso) != EOF) {
+			while(fscanf(memoria->regfd, "%[^|]|%[^|]|%[^|]|", ID, nome, curso) != EOF) {
 				if (strcmp(buffer, ID) == 0) {
 					sprintf(resposta, "%s|%s|%s|", ID, nome, curso);
 					break;
 				}
 			}
+			fclose(memoria->regfd);
 		}
+		sem_post(&(memoria->semaforo));
 	}
 	else { // inserção
-		/* ------------------------
-			   colocar semáforo aqui
-		   ------------------------
-		*/
-
-		if ((regfd = fopen(REGS, "a")) == NULL) {
+		sem_wait(&(memoria->semaforo));
+		
+		if ((memoria->regfd = fopen(REGS, "a")) == NULL) {
 			printf("Erro ao acessar registros\n\n");
 			sprintf(resposta, "ERROR");
 		}
 		else {
-			fprintf(regfd, "%s", buffer);
+			fprintf(memoria->regfd, "%s", buffer);
 			sprintf(resposta, "Registro gravado com sucesso!\n\n");
+			fclose(memoria->regfd);
 		}
+		sem_post(&(memoria->semaforo));
 	}
 	write(sockfd_cliente, resposta, sizeof(resposta));
 	close(sockfd_cliente);
