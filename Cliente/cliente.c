@@ -1,3 +1,13 @@
+// +-----------------------------------+
+// | Trabalho de Sistemas Operacionais |
+// |             Cliente              |
+// |                                   |
+// |     Ricardo Henrique Brunetto     |
+// |    Rafael Rodrigues dos Santos    |
+// |                                   |
+// |          Dezembro de 2017         |
+// |            Maringá - PR           |
+// +-----------------------------------+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
