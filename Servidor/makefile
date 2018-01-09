@@ -1,20 +1,20 @@
 EXEC=servidor
+LOG=reqs.log
+REGS=registers.dat
 
 all: execute
 	@echo "Sucesso!"
 
 compile:
-	@gcc $(EXEC).c -o $(EXEC) -lm
+	@gcc $(EXEC).c -o $(EXEC) -lm -lpthread
 
-clear: compile
-	@rm -f *.synctex.gz
-	@rm -f *.aux
-	@rm -f *.log
-	@rm -f *.out
-	@rm -f *.blg
-	@rm -f *.bbl
-	@rm -f *.ind
-	@rm -f *.ilg
+files: compile
+	@if ! [ -e $(LOG) ]; then \
+	touch $(LOG); \
+	fi;
+	@if ! [ -e $(REGS) ]; then \
+	touch $(REGS); \
+	fi;
 
-execute: clear
-	@start "" $(EXEC).exe
+execute: files
+	@./servidor
